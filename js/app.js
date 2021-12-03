@@ -24,11 +24,11 @@ var globalController = (function(budgetCtrl, UICtrl) {
     }
 
     //Button click
-    document.querySelector('.btn-add').addEventListener('click', addItems);
+    document.querySelector('.btn-add').addEventListener('click', addItemsCtrl);
 
     //Enter key
     document.addEventListener('keypress', function(event){
-        if(event.keyCode === 13 || event.which === 13) addItems();
+        if(event.keyCode === 13 || event.which === 13) addItemsCtrl();
     });
 
 })(budgetController,UIController);
