@@ -1,18 +1,16 @@
 var budgetController = (function(){
-    var x = 23;
-    return {
-        prueba: function(b){
-            return b;
-        }
-    }
+    
 
 })();
 
 var UIController = (function(){
 
 })();
-var controller = (function(budgetCtrl,UIctrl){
-    document.querySelector('.button').addEventListener('click',function(){
+
+// Global
+var globalController = (function(budgetCtrl, UICtrl) {
+    //Controlle
+    var addItemsCtrl = function(){
         // 1. Tomar los datos de Input Items
 
         // 2. Agregar los datos al budgetController
@@ -22,6 +20,15 @@ var controller = (function(budgetCtrl,UIctrl){
         // 4. Calcular el budget
 
         // 5. Mostrar los datos al User
+        console.log('bien');
+    }
 
+    //Button click
+    document.querySelector('.btn-add').addEventListener('click', addItems);
+
+    //Enter key
+    document.addEventListener('keypress', function(event){
+        if(event.keyCode === 13 || event.which === 13) addItems();
     });
+
 })(budgetController,UIController);
