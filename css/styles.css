@@ -3,11 +3,23 @@ body{
     text-align: center;
     background-color: azure;
 }
-
+/* .add-type{
+    color:crimson;
+    font-family: monospace;
+    top: 4rem;
+}
+.add-description{
+    color:crimson;
+    font-family: monospace;
+    top: 4rem;
+}
+.add-value{
+    color:crimson;
+    font-family: monospace;
+    top: 4rem;
+} */
 .btn-add{
     color:crimson;
     font-family: monospace;
     top: 4rem;
-   
-
 }

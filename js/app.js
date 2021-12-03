@@ -25,9 +25,9 @@ var budgetController = (function(){
 var UIController = (function(){
     // Here was created an Object where we store all DOM strings.
     var DOMstrings = { 
-        inputType: '.add--type', 
-        inputDescription: '.add--description',
-        inputValue: '.add--value',
+        inputType: '.add-type', 
+        inputDescription: '.add-description',
+        inputValue: '.add-value',
         inputButton: '.btn-add'
     }
     // In this method retunrs an Object where we store all the values of input DOM
@@ -58,7 +58,7 @@ var globalController = (function(budgetCtrl, UICtrl) {
     var addItemsCtrl = function(){
         // 1. Tomar los datos de Input Items
         var input = UICtrl.getImput();
-
+        console.log(input);
         // 2. Agregar los datos al budgetController
         // 3. Agregar los datos al UIController
         // 4. Calcular el budget
