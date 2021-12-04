@@ -3,23 +3,46 @@ var budgetController = (function(){
         this.id = id,
         this.description = description,
         this.valeu = valeu
-    }
+    };
     var Incomes = function(id,description,valeu) {
         this.id= id,
         this.description = description,
         this.valeu = valeu
-    }
-    var Data = {
-        allItems:{
+    };
+    var data = {
+        allItems: {
             exp:[],
             inc:[]
         },
         totals:{
-            exp:[],
-            inc:[]
+            exp:0,
+            inc:0
         }
-    }
+    };
 
+    return {        
+        addItem: function(type, des, val) { // Adding a New Item
+            var newItem, ID;
+            // Create a new ID
+            if(data.allItems[type].length > 0){
+                ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
+            }else{
+                ID = 0;
+            }           
+            // Create a new Item based
+            if(type === 'exp'){
+                newItem = new Expenses(ID, des, val);
+            }else if(type === 'inc'){
+                newItem = new Incomes(ID, des, val);
+            }
+            data.allItems[type].push(newItem); // Push it into a data structure
+            //data[allItems][type].push(newItem); // Push it into a data structure
+            return newItem; //return a new element
+        },
+        testing: function(){
+            console.log(data);
+        }
+    };
 })();
 
 var UIController = (function(){
@@ -42,7 +65,7 @@ var UIController = (function(){
         getDOMstrings: function(){ // Here we make "public" or make accessible the DOMstrings object for the other App Modules
             return DOMstrings;
         }
-    }
+    };
 })();
 
 // Global
@@ -58,10 +81,11 @@ var globalController = (function(budgetCtrl, UICtrl) {
     }
     //Controller
     var addItemsCtrl = function(){
+        var input, newItem;
         // 1. Tomar los datos de Input Items
-        var input = UICtrl.getImput();
-        console.log(input);
+        input = UICtrl.getImput();
         // 2. Agregar los datos al budgetController
+        newItem = budgetCtrl.addItem(input.type, input.description, input.value);
         // 3. Agregar los datos al UIController
         // 4. Calcular el budget
         // 5. Mostrar los datos al User
@@ -69,8 +93,9 @@ var globalController = (function(budgetCtrl, UICtrl) {
     return {        
         init: function(){ 
             setupEventListeners(); 
+            console.log('App has started')
         }
-    }
+    };
 })(budgetController,UIController);
 
 globalController.init();
