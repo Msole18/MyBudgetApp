@@ -47,11 +47,13 @@ var UIController = (function(){
 
 // Global
 var globalController = (function(budgetCtrl, UICtrl) {
+    // Here we read the data in the User Interface
     var setupEventListeners = function(){
         var DOM = UICtrl.getDOMstrings(); // Here we call DOMstrings Object to get the DOM string that we need
         document.querySelector(DOM.inputButton).addEventListener('click', addItemsCtrl); //Button click
         document.addEventListener('keypress', function(event){ //Enter key
-            if(event.keyCode === 13 || event.which === 13) addItemsCtrl();
+           // if(event.keyCode === 13  || event.which === 13) addItemsCtrl();
+            if(event.key === 13 || event.keyCode === 13  || event.which === 13) addItemsCtrl();
         });
     }
     //Controller
@@ -63,11 +65,10 @@ var globalController = (function(budgetCtrl, UICtrl) {
         // 3. Agregar los datos al UIController
         // 4. Calcular el budget
         // 5. Mostrar los datos al User
-      
     }
     return {        
-        init: function(){ // Here we read the data in the User Interface
-            setupEventListeners();
+        init: function(){ 
+            setupEventListeners(); 
         }
     }
 })(budgetController,UIController);
