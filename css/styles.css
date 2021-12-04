@@ -19,7 +19,15 @@ body{
     top: 4rem;
 } */
 .btn-add{
-    color:crimson;
     font-family: monospace;
     top: 4rem;
+    background-color: green;
+}
+.ion-ios-check-outline{
+    background: url('https://api.iconify.design/ant-design/check-circle-outlined.svg') no-repeat center center / contain;
+    content: url('https://api.iconify.design/ant-design/check-circle-outlined.svg');
+}
+.ion-ios-close-outline{
+    background: url('https://api.iconify.design/ant-design/close-circle-outlined.svg') no-repeat center center / contain;
+    content: url('https://api.iconify.design/ant-design/close-circle-outlined.svg');
 }
