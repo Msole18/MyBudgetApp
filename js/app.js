@@ -132,7 +132,7 @@ var globalController = (function(budgetCtrl, UICtrl) {
             UICtrl.clearFields();
             // 5. Calculate and updates the budget
             updateBudget();
-        }cl  
+        }  
     }
     return {        
         init: function(){ 
