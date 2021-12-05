@@ -20,14 +20,29 @@ body{
 } */
 .btn-add{
     font-family: monospace;
-    top: 4rem;
-    background-color: green;
+    background-color: transparent;
+    border-radius: 50px;
+    size-adjust: 50px;
+    border-color: transparent;
 }
 .ion-ios-check-outline{
     background: url('https://api.iconify.design/ant-design/check-circle-outlined.svg') no-repeat center center / contain;
     content: url('https://api.iconify.design/ant-design/check-circle-outlined.svg');
+    padding: 1.5px;
 }
 .ion-ios-close-outline{
     background: url('https://api.iconify.design/ant-design/close-circle-outlined.svg') no-repeat center center / contain;
     content: url('https://api.iconify.design/ant-design/close-circle-outlined.svg');
+}
+.item-container{
+    display: grid;
+    width: 540px;
+    grid-auto-rows: 100px;
+    grid-template-columns: 120px 120px;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+.incomes-container{
+    border-color: black;
 }
