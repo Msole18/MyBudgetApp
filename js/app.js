@@ -76,7 +76,7 @@ var UIController = (function(){
             } else if(type === 'exp'){
                 element = DOMstrings.expensesContainer;
                 HTML = '<div class="item clearfix" id="expense-%id%"><div class="item-description">%description%</div>'+
-                       '<div class="right clearfix"><div class="item-value">%value%</div><div class="item-porcentage">'+
+                       '<div class="left clearfix"><div class="item-value">%value%</div><div class="item-porcentage">'+
                        '21%</div><div class="item-delete"><button class="item-delete-btn"><i class="ion-ios-close-outline">'+
                        '</i></button></div></div></div>';
             }

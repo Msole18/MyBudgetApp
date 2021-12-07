@@ -1,3 +1,12 @@
+.ion-ios-check-outline{
+    background: url('https://api.iconify.design/ant-design/check-circle-outlined.svg') no-repeat center center / contain;
+    content: url('https://api.iconify.design/ant-design/check-circle-outlined.svg');
+    padding: 1.5px;
+}
+.ion-ios-close-outline{
+    background: url('https://api.iconify.design/ant-design/close-circle-outlined.svg') no-repeat center center / contain;
+    content: url('https://api.iconify.design/ant-design/close-circle-outlined.svg');
+}
 body{
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     text-align: center;
@@ -25,24 +34,84 @@ body{
     size-adjust: 50px;
     border-color: transparent;
 }
-.ion-ios-check-outline{
-    background: url('https://api.iconify.design/ant-design/check-circle-outlined.svg') no-repeat center center / contain;
-    content: url('https://api.iconify.design/ant-design/check-circle-outlined.svg');
-    padding: 1.5px;
+.item-delete-btn{
+    font-family: monospace;
+    background-color: transparent;
+    border-radius: 50px;
+    size-adjust: 50px;
+    border-color: transparent;
 }
-.ion-ios-close-outline{
-    background: url('https://api.iconify.design/ant-design/close-circle-outlined.svg') no-repeat center center / contain;
-    content: url('https://api.iconify.design/ant-design/close-circle-outlined.svg');
+.item-porcentage{
+    text-align: center;
+    font-family: monospace;
+    font-size: 0.8em;
+    color:black;
+    /* background-color: palevioletred; */
+    border: 0.4px solid black;
+    border-radius: 5px;
+    border-color: black;
+    margin: 2.5px;
+    width: fit-content;
+    padding: 0.2px;
+}
+.top-container{
+    border: 2px solid black;
+    padding: 10px;
+    margin-bottom: 15px; 
+   
 }
 .item-container{
+    border: 2px solid black;
     display: grid;
-    width: 540px;
-    grid-auto-rows: 100px;
-    grid-template-columns: 120px 120px;
-    align-items: center;
-    justify-content: space-between;
-    
+    grid-template-columns: repeat(2 ,1fr);
+    grid-gap: 5px;
 }
 .incomes-container{
-    border-color: black;
+    border: 2px solid  yellow;
+
+}
+.incomes-title{
+    border: 2px solid green;
+    margin: 0;/*este dejalo*/
+}
+.incomes-list{
+    /* border-bottom: 2px solid green; */
+    padding: 1.5px; /*este dejalo*/
+}
+.expenses-container{
+    border: 2px solid purple;
+}
+.expenses-title{
+    border: 2px solid red;
+    margin: 0;/*este dejalo*/
+}
+.expenses-list{
+    /* border-bottom: 2px solid green; */
+    padding: 1.5px; /*este dejalo*/
+}
+.item{
+    /* border-bottom: 2px solid green; */
+    margin: 0.5px;
+    display: grid;
+    grid-template-columns: repeat(2 ,1fr);
+    grid-gap: 5px;
+}
+.item-description{
+    border-bottom: 2px solid blue;
+    width: 500px;
+}
+.right{
+    border-bottom: 2px solid orange;
+    display: grid;
+    grid-template-columns: repeat(2 ,1fr);
+    grid-gap: 2px;
+    width: 150px max-content;
+}
+.left{
+    border-bottom: 2px solid orange;
+    display: grid;
+    grid-template-columns: repeat(3 ,1fr);
+    grid-gap: 2px;
+    width: 150px max-content;
+
 }
