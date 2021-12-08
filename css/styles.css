@@ -67,7 +67,7 @@ body{
     grid-gap: 5px;
 }
 .incomes-container{
-    /* border: 2px solid  yellow; */
+    border: 2px solid  transparent;
 
 }
 .incomes-title{
@@ -79,7 +79,7 @@ body{
     padding: 1.5px; /*este dejalo*/
 }
 .expenses-container{
-    /* border: 2px solid purple; */
+    border: 2px solid transparent;
 }
 .expenses-title{
     border: 2px solid red;
