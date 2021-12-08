@@ -41,7 +41,7 @@ body{
     size-adjust: 50px;
     border-color: transparent;
 }
-.item-porcentage{
+.item-percentage{
     text-align: center;
     font-family: monospace;
     font-size: 0.8em;
@@ -56,9 +56,27 @@ body{
 }
 .top-container{
     border: 2px solid black;
+    /* padding: 10px; */
+    margin-bottom: 15px; 
+}
+.budget-container{
+    border: 2px solid black;
+    /* padding: 10px;
+    margin-bottom: 15px;  */
+}
+.budget-incomes{
+    border: 2px solid green; 
+}
+.budget-expenses{
+    border: 2px solid red; 
+}
+.budget-expenses-percentage{
+    border: 2px solid blue; 
+}
+.med-container{
+    border: 2px solid black;
     padding: 10px;
     margin-bottom: 15px; 
-   
 }
 .item-container{
     /* border: 2px solid black; */
@@ -71,7 +89,7 @@ body{
 
 }
 .incomes-title{
-    border: 2px solid green;
+    border: 2px solid blueviolet;
     margin: 0;/*este dejalo*/
 }
 .incomes-list{
@@ -114,3 +132,10 @@ body{
     grid-gap: 2px;
     width: 150px;
 }
+/* .derecho{
+    border-bottom: 2px solid orange;
+    display: grid;
+    grid-template-columns: repeat(2 ,1fr);
+    grid-gap: 2px;
+    width: 150px max-content;
+} */
