@@ -1,0 +1,37 @@
+.parent {
+    display: grid;
+    grid-template-columns: 10px repeat(8, 2fr) 10px;
+    grid-template-rows: 10px repeat(8, 2fr) 10px;
+    grid-column-gap: 5px;
+    grid-row-gap: 5px;
+    }
+    
+    .div1 { 
+        
+        grid-area: 2 / 2 / 3 / 10;
+        border: 2px solid black; 
+    }
+    .div2 { 
+        border: 2px solid black;
+        grid-area: 3 / 2 / 5 / 10; 
+    }
+    .div3 { 
+        border: 2px solid black;
+        grid-area: 5 / 2 / 10 / 6; 
+    }
+    .div4 { 
+        border: 2px solid black;
+        grid-area: 5 / 6 / 10 / 10; 
+    }
+    .div5 { 
+        border: 2px solid black;
+        grid-area: 4 / 3 / 5 / 5; 
+    }
+    .div6 { 
+        border: 2px solid black;
+        grid-area: 4 / 7 / 5 / 9; 
+    }
+    .div7 { 
+        border: 2px solid black;
+        grid-area: 2 / 5 / 4 / 7; 
+    }

@@ -9,6 +9,13 @@ var budgetController = (function(){
         this.description = description,
         this.value = value
     };
+    var calculateTotals = function(type){
+        var sum = 0;
+        data.allItems[type].forEach(function(curr){
+            sum += curr.value;
+        });
+        data.totals[type] = sum;
+    };
     var data = {
         allItems: {
             exp:[],
@@ -17,10 +24,12 @@ var budgetController = (function(){
         totals:{
             exp:0,
             inc:0
-        }
+        },
+        budget: 0,
+        porcentage: -1
     };
+    return {     
 
-    return {        
         addItem: function(type, des, val) { // Adding a New Item
             var newItem, ID;
             // Create a new ID
@@ -38,6 +47,27 @@ var budgetController = (function(){
             data.allItems[type].push(newItem); // Push it into a data structure
             return newItem; //return a new element
         },
+        calculateBudget:function(){
+            // calculate total incomes or expense
+            calculateTotals('inc');
+            calculateTotals('exp');
+            // calcule de budget: incomes - expenses
+            data.budget =  data.totals.inc - data.totals.exp;
+            // calculate percentage
+            if (data.totals.inc > 0 ){
+                data.porcentage = Math.round((data.totals.exp / data.totals.inc) * 100);
+            }else {
+                data.porcentage = -1;
+            }
+        },
+        getBudget: function(){
+            return {
+                budget: data.budget,
+                totalInc: data.totals.inc,
+                totalExp: data.totals.exp,
+                porcentage: data.porcentage
+            }
+        },
         testing: function(){
             console.log(data);
         }
@@ -53,7 +83,7 @@ var UIController = (function(){
         inputButton: '.btn-add',
         incomesContainer: '.incomes-list',
         expensesContainer: '.expenses-list'
-
+        
     }
     // In this method retunrs an Object where we store all the values of input DOM
     return {        
@@ -70,13 +100,13 @@ var UIController = (function(){
             if(type === 'inc'){
                 element = DOMstrings.incomesContainer;
                 HTML = '<div class="incomes-list"><div class="item clearfix" id="incomes-%id%"><div '+
-                       'class="item-description">%description%</div><div class="right clearfix" id="incomes-0">'+
+                       'class="item-description">%description%</div><div class="left clearfix" id="incomes-0">'+
                        '<div class="item-value">%value%</div><div class="item-delete">'+
                        '<button class="item-delete-btn"><i class="ion-ios-close-outline"></i></button></div></div></div></div>';
             } else if(type === 'exp'){
                 element = DOMstrings.expensesContainer;
                 HTML = '<div class="item clearfix" id="expense-%id%"><div class="item-description">%description%</div>'+
-                       '<div class="left clearfix"><div class="item-value">%value%</div><div class="item-porcentage">'+
+                       '<div class="right clearfix"><div class="item-value">%value%</div><div class="item-porcentage">'+
                        '21%</div><div class="item-delete"><button class="item-delete-btn"><i class="ion-ios-close-outline">'+
                        '</i></button></div></div></div>';
             }
@@ -112,13 +142,15 @@ var globalController = (function(budgetCtrl, UICtrl) {
         document.addEventListener('keypress', function(event){ //Enter key
             if(event.key === 13 || event.keyCode === 13  || event.which === 13) addItemsCtrl();
         });
-    }
+    };
     var updateBudget = function(){
         // 5. Calcular el budget
-        // 5. Return the budget
+        budgetCtrl.calculateBudget();
+        // 6. Return the budget
+        var budget = budgetCtrl.getBudget();
         // 7. Mostrar los datos al User
 
-    }
+    };
     var addItemsCtrl = function(){
         var input, newItems, newListItem;
         // 1. Tomar los datos de Input Items
@@ -133,7 +165,7 @@ var globalController = (function(budgetCtrl, UICtrl) {
             // 5. Calculate and updates the budget
             updateBudget();
         }  
-    }
+    };
     return {        
         init: function(){ 
             setupEventListeners(); 
