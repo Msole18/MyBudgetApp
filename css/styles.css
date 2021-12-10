@@ -39,7 +39,7 @@ body{
     background-color: transparent;
     border-radius: 50px;
     size-adjust: 50px;
-    border-color: transparent;
+    border-color: chartreuse;
 }
 .item-percentage{
     text-align: center;

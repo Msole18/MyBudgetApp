@@ -16,18 +16,20 @@ var budgetController = (function(){
         });
         data.totals[type] = sum;
     };
+
     var data = {
         allItems: {
-            exp:[],
-            inc:[]
+            inc:[],
+            exp:[]
         },
         totals:{
-            exp:0,
-            inc:0
+            inc:0,
+            exp:0
         },
         budget: 0,
         percentage: -1
     };
+
     return {     
 
         addItem: function(type, des, val) { // Adding a New Item
@@ -47,6 +49,20 @@ var budgetController = (function(){
             data.allItems[type].push(newItem); // Push it into a data structure
             return newItem; //return a new element
         },
+
+        deleteItem: function(type,id) {
+            var IDs, index;
+            // We use a map to get all ids and stored in a new array
+            IDs = data.allItems[type].map(function (current){
+                return current.id;
+            });
+            // Them we find de index of the ID in the array. In case the item is not find in the array, retunr -1
+            index = IDs.indexOf(id);
+            if (index !== -1) {
+                data.allItems[type].splice(index,1);
+            }
+        },
+
         calculateBudget:function(){
             // calculate total incomes or expense
             calculateTotals('inc');
@@ -86,32 +102,34 @@ var UIController = (function(){
         budgetLabel: '.budget-value',
         incomesLabel: '.budget-incomes-value',
         expensesLabel: '.budget-expenses-value',
-        percentageLabel: '.budget-expenses-percentage'
+        percentageLabel: '.budget-expenses-percentage',
+        itemContainer: '.item-container'
     }
     // In this method retunrs an Object where we store all the values of input DOM
     return {        
-        getImput: function(){ // Here we read the data in the User Interface
+        getInput: function(){ // Here we read the data in the User Interface
             return {
                 type: document.querySelector(DOMstrings.inputType).value,
                 description: document.querySelector(DOMstrings.inputDescription).value,
                 value: parseFloat(document.querySelector(DOMstrings.inputValue).value)
             } 
         },
-        addListItem: function(obj, type) {
+
+        addListItem: function(obj, type) { // Here we shows the data in the Incomes or Expense list
             var HTML, newHTML, element;
             //Create a HTML string
             if(type === 'inc'){
                 element = DOMstrings.incomesContainer;
-                HTML = '<div class="incomes-list"><div class="item clearfix" id="incomes-%id%"><div '+
+                HTML = '<div class="incomes-list"><div class="item clearfix" id="inc-%id%"><div '+
                        'class="item-description">%description%</div><div class="left clearfix" id="incomes-0">'+
-                       '<div class="item-value">%value%</div><div class="item-delete">'+
-                       '<button class="item-delete-btn"><i class="ion-ios-close-outline"></i></button></div></div></div></div>';
+                       '<div class="item-value">%value%</div><div class="item-delete"><button class="item-'+
+                       'delete-btn"><i class="ion-ios-close-outline"></i></button></div></div></div></div>';
             } else if(type === 'exp'){
                 element = DOMstrings.expensesContainer;
-                HTML = '<div class="item clearfix" id="expense-%id%"><div class="item-description">%description%</div>'+
-                       '<div class="right clearfix"><div class="item-value">%value%</div><div class="item-percentage">'+
-                       '21%</div><div class="item-delete"><button class="item-delete-btn"><i class="ion-ios-close-outline">'+
-                       '</i></button></div></div></div>';
+                HTML = '<div class="item clearfix" id="exp-%id%"><div class="item-description">%description%'+
+                       '</div><div class="right clearfix"><div class="item-value">%value%</div><div class="item-'+
+                       'percentage">21%</div><div class="item-delete"><button class="item-delete-btn"><i class'+
+                       '="ion-ios-close-outline"></i></button></div></div></div>';
             }
             //Remplace the placeholder text with some actual data
             newHTML = HTML.replace('%id%',obj.id);
@@ -120,6 +138,12 @@ var UIController = (function(){
             //Insert the HTML into a DOM
             document.querySelector(element).insertAdjacentHTML('beforeend',newHTML);
         },
+
+        deleteListItem: function(selectorID) {
+            var removeItem = document.getElementById(selectorID);
+            removeItem.parentNode.removeChild(removeItem);
+        },
+
         clearFields: function(obj, type) {
             var fields, fieldsArr;
             fields = document.querySelectorAll(DOMstrings.inputDescription + ', '+ DOMstrings.inputValue);
@@ -130,6 +154,7 @@ var UIController = (function(){
             });   
             fieldsArr[0].focus();
         },
+
         displayBudget: function(obj){
             document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
             document.querySelector(DOMstrings.incomesLabel).textContent = obj.totalInc;
@@ -139,8 +164,8 @@ var UIController = (function(){
             }else {
                 document.querySelector(DOMstrings.percentageLabel).textContent = '---';
             }
-            
         },
+
         getDOMstrings: function(){ // Here we make "public" or make accessible the DOMstrings object for the other App Modules
             return DOMstrings;
         }
@@ -148,39 +173,74 @@ var UIController = (function(){
 })();
 
 // Global
-var globalController = (function(budgetCtrl, UICtrl) {
+var controller = (function(budgetCtrl, UICtrl) {
     // Here we read the data in the User Interface
     var setupEventListeners = function(){
         var DOM = UICtrl.getDOMstrings(); // Here we call DOMstrings Object to get the DOM string that we need
-        document.querySelector(DOM.inputButton).addEventListener('click', addItemsCtrl); //Button click
+
+        //Add item button event
+        document.querySelector(DOM.inputButton).addEventListener('click', ctrlAddItem); //Button click
         document.addEventListener('keypress', function(event){ //Enter key
-            if(event.key === 13 || event.keyCode === 13  || event.which === 13) addItemsCtrl();
+            if(event.key === 13 || event.keyCode === 13  || event.which === 13) ctrlAddItem();
         });
+
+        //Delete item button event
+        // Add an event to the container wich its the firt element that the income or expense items have in common
+        // because we wan to use Event Delagation 
+        document.querySelector(DOM.itemContainer).addEventListener('click', ctrlDeleteItem); 
     };
+
     var updateBudget = function(){
-        // 5. Calcular el budget
+        // 1. Calculate the budget
         budgetCtrl.calculateBudget();
-        // 6. Return the budget
+        // 2. Return the budget
         var budget = budgetCtrl.getBudget();
-        // 7. Mostrar los datos al User
-        console.log(budget)
+        // 3. Display the budget 
         UICtrl.displayBudget(budget);
     };
-    var addItemsCtrl = function(){
+
+    var ctrlAddItem = function(){
         var input, newItems, newListItem;
-        // 1. Tomar los datos de Input Items
-        input = UICtrl.getImput();
+        // 1. Get the input data
+        input = UICtrl.getInput();
+
         if(input.description !== "" && !isNaN(input.value) && input.value > 0){
             // 2. Agregar los datos al budgetController
             newItems = budgetCtrl.addItem(input.type, input.description, input.value);
+
             // 3. Agregar los datos al UIController
             newListItem = UICtrl.addListItem(newItems, input.type);
+
             // 4. Clear UI fields
             UICtrl.clearFields();
+
             // 5. Calculate and updates the budget
             updateBudget();
         }  
     };
+
+    var ctrlDeleteItem = function(event){
+        var itemID, splitID, ID, type;
+        // to get the itemID we use the target(point the elemt that was clicked) and parentNode (get parent elemnt)
+            itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
+
+        if (itemID) {
+            splitID = itemID.split('-');
+            type = splitID[0];
+            ID = parseInt(splitID[1]);
+
+            // 1. Delete the item fron the data structure
+            budgetCtrl.deleteItem(type,ID);
+
+            // 2. Delete the item fron the UI
+            UICtrl.deleteListItem(itemID);
+
+            // 3. Update and show the budget
+            updateBudget();
+        }
+        
+    };
+
     return {        
         init: function(){ 
             UICtrl.displayBudget({
@@ -189,10 +249,12 @@ var globalController = (function(budgetCtrl, UICtrl) {
                 totalExp: 0,
                 percentage: 0
             });
+
             setupEventListeners(); 
             console.log('App has started')
         }
     };
+
 })(budgetController,UIController);
 
-globalController.init();
+controller.init();
