@@ -1,14 +1,29 @@
 var budgetController = (function(){
     var Expenses = function(id,description,value) {
-        this.id = id,
-        this.description = description,
-        this.value = value
+        this.id = id;
+        this.description = description;
+        this.value = value;
+        this.percentage = -1;
     };
+
+    Expenses.prototype.calcPercentage = function(totalIncome) {
+        if(totalIncome > 0) {
+            this.percentage = Math.round((this.value / totalIncome ) * 100);
+        }else {
+            this.percentage = -1;
+        }
+    };
+    
+    Expenses.prototype.getPercentage = function(){
+        return this.percentage;
+    };
+
     var Incomes = function(id,description,value) {
-        this.id= id,
-        this.description = description,
-        this.value = value
+        this.id= id;
+        this.description = description;
+        this.value = value;
     };
+
     var calculateTotals = function(type){
         var sum = 0;
         data.allItems[type].forEach(function(curr){
@@ -76,6 +91,20 @@ var budgetController = (function(){
                 data.percentage = -1;
             }
         },
+
+        calculatePercentages: function() {
+            data.allItems.exp.forEach(function(cur) {
+                cur.calcPercentage(data.totals.inc);
+            });
+        },
+
+        getPercentages: function() {
+            var allPercent = data.allItems.exp.map(function(cur) {
+                return cur.getPercentage();
+            });
+            return allPercent;
+        },
+
         getBudget: function(){
             return {
                 budget: data.budget,
@@ -103,7 +132,8 @@ var UIController = (function(){
         incomesLabel: '.budget-incomes-value',
         expensesLabel: '.budget-expenses-value',
         percentageLabel: '.budget-expenses-percentage',
-        itemContainer: '.item-container'
+        itemContainer: '.item-container',
+        expPercentageLabel: '.item-percentage'
     }
     // In this method retunrs an Object where we store all the values of input DOM
     return {        
@@ -166,6 +196,24 @@ var UIController = (function(){
             }
         },
 
+        displayPercentage: function(percentage){
+            var fields = document.querySelectorAll(DOMstrings.expPercentageLabel);
+
+            var nodeListForEach = function(list, callback) {
+                for (var i = 0; i < list.length; i++) {
+                    callback(list[i], i);
+                }
+            };
+
+            nodeListForEach(fields, function(current, index) {
+                if(percentage[index] > 0) {
+                    current.textContent = percentage[index] + '%';  
+                } else {
+                    current.textContent = '---';
+                }
+            });
+        },
+
         getDOMstrings: function(){ // Here we make "public" or make accessible the DOMstrings object for the other App Modules
             return DOMstrings;
         }
@@ -199,6 +247,16 @@ var controller = (function(budgetCtrl, UICtrl) {
         UICtrl.displayBudget(budget);
     };
 
+    var updatePercenteges = function(){
+        // 1. Calculate the percenteges
+        budgetCtrl.calculatePercentages();
+        // 2. Read the percenteges
+        var percentages = budgetCtrl.getPercentages();
+        // 3. Display the new percenteges 
+        console.log(percentages)
+        UICtrl.displayPercentage(percentages);
+    };
+
     var ctrlAddItem = function(){
         var input, newItems, newListItem;
         // 1. Get the input data
@@ -216,6 +274,9 @@ var controller = (function(budgetCtrl, UICtrl) {
 
             // 5. Calculate and updates the budget
             updateBudget();
+
+            // 6. Calculate and updates the percenteges
+            updatePercenteges();
         }  
     };
 
@@ -237,8 +298,10 @@ var controller = (function(budgetCtrl, UICtrl) {
 
             // 3. Update and show the budget
             updateBudget();
-        }
-        
+
+            // 4. Calculate and updates the percenteges
+            updatePercenteges();
+        }  
     };
 
     return {        
