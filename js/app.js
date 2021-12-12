@@ -133,9 +133,31 @@ var UIController = (function(){
         expensesLabel: '.budget-expenses-value',
         percentageLabel: '.budget-expenses-percentage',
         itemContainer: '.item-container',
-        expPercentageLabel: '.item-percentage'
-    }
-    // In this method retunrs an Object where we store all the values of input DOM
+        expPercentageLabel: '.item-percentage',
+        dateLabel: '.budget-title-month'
+    };
+    
+    var formatNumber = function (num, type) {
+        var numSplit, int, deci;
+        num = Math.abs(num);
+        num = num.toFixed(2);
+        
+        numSplit = num.split('.');
+        int = numSplit[0];
+        deci = numSplit[1];
+
+        if (int.length > 3) {
+            int = int.substr(0, int.length - 3) + ',' + int.substr(int.length - 3, 3);
+        }
+        return (type === 'exp' ? '-' : '+') + ' ' + int + '.' + deci;
+    };
+
+    var nodeListForEach = function(list, callback) {
+        for (var i = 0; i < list.length; i++) {
+            callback(list[i], i);
+        }
+    };
+
     return {        
         getInput: function(){ // Here we read the data in the User Interface
             return {
@@ -151,7 +173,7 @@ var UIController = (function(){
             if(type === 'inc'){
                 element = DOMstrings.incomesContainer;
                 HTML = '<div class="incomes-list"><div class="item clearfix" id="inc-%id%"><div '+
-                       'class="item-description">%description%</div><div class="left clearfix" id="incomes-0">'+
+                       'class="item-description">%description%</div><div class="right clearfix" id="incomes-0">'+
                        '<div class="item-value">%value%</div><div class="item-delete"><button class="item-'+
                        'delete-btn"><i class="ion-ios-close-outline"></i></button></div></div></div></div>';
             } else if(type === 'exp'){
@@ -164,7 +186,7 @@ var UIController = (function(){
             //Remplace the placeholder text with some actual data
             newHTML = HTML.replace('%id%',obj.id);
             newHTML = newHTML.replace('%description%',obj.description);
-            newHTML = newHTML.replace('%value%',obj.value);
+            newHTML = newHTML.replace('%value%', formatNumber(obj.value, type));
             //Insert the HTML into a DOM
             document.querySelector(element).insertAdjacentHTML('beforeend',newHTML);
         },
@@ -186,9 +208,12 @@ var UIController = (function(){
         },
 
         displayBudget: function(obj){
-            document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
-            document.querySelector(DOMstrings.incomesLabel).textContent = obj.totalInc;
-            document.querySelector(DOMstrings.expensesLabel).textContent = obj.totalExp;
+            var type;
+            obj.budget > 0 ? type = 'inc' : type = 'exp';
+
+            document.querySelector(DOMstrings.budgetLabel).textContent = formatNumber(obj.budget, type);
+            document.querySelector(DOMstrings.incomesLabel).textContent = formatNumber(obj.totalInc, 'inc');
+            document.querySelector(DOMstrings.expensesLabel).textContent = formatNumber(obj.totalExp, 'exp');
             if(obj.percentage>0) {
                 document.querySelector(DOMstrings.percentageLabel).textContent = obj.percentage + "%";
             }else {
@@ -196,14 +221,8 @@ var UIController = (function(){
             }
         },
 
-        displayPercentage: function(percentage){
+        displayPercentage: function(percentage) {
             var fields = document.querySelectorAll(DOMstrings.expPercentageLabel);
-
-            var nodeListForEach = function(list, callback) {
-                for (var i = 0; i < list.length; i++) {
-                    callback(list[i], i);
-                }
-            };
 
             nodeListForEach(fields, function(current, index) {
                 if(percentage[index] > 0) {
@@ -214,7 +233,33 @@ var UIController = (function(){
             });
         },
 
-        getDOMstrings: function(){ // Here we make "public" or make accessible the DOMstrings object for the other App Modules
+        displayDate: function() {
+            var now, month, months, year;
+
+            now = new Date();
+            months = ['January', 'February', 'March', 'April', 'May', 'June',
+                      'July', 'August', 'September', 'October', 'November', 'December'];
+            month = now.getMonth();
+            year = now.getFullYear();
+
+            document.querySelector(DOMstrings.dateLabel).textContent = months[month] + ' ' + year;
+        },
+
+        changedType: function() {
+            var fields;
+            fields = document.querySelectorAll(
+                DOMstrings.inputType + ',' + 
+                DOMstrings.inputDescription + ',' + 
+                DOMstrings.inputValue);
+
+            nodeListForEach(fields, function(cur) {
+                cur.classList.toggle('red-focus');
+            });
+
+            document.querySelector(DOMstrings.inputButton).classList.toggle('red');
+        },
+
+        getDOMstrings: function() { // Here we make "public" or make accessible the DOMstrings object for the other App Modules
             return DOMstrings;
         }
     };
@@ -236,6 +281,7 @@ var controller = (function(budgetCtrl, UICtrl) {
         // Add an event to the container wich its the firt element that the income or expense items have in common
         // because we wan to use Event Delagation 
         document.querySelector(DOM.itemContainer).addEventListener('click', ctrlDeleteItem); 
+        document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changedType); 
     };
 
     var updateBudget = function(){
@@ -306,6 +352,7 @@ var controller = (function(budgetCtrl, UICtrl) {
 
     return {        
         init: function(){ 
+            UICtrl.displayDate();
             UICtrl.displayBudget({
                 budget: 0,
                 totalInc: 0,
